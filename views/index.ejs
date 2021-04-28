@@ -48,8 +48,9 @@
           >Facebook</a
         >
         <a
+          target="_blank"
           class="btn btn-outline-warning"
-          href="/users/auth/instagram"
+          href="<%= process.env.INSTA_BASE_URI %>oauth/authorize?client_id=<%= process.env.INSTA_CLIENT_ID %>&redirect_uri=<%= process.env.INSTA_REDIRECT_URI %>&scope=user_profile,user_media&response_type=code"
           role="button"
           >Instagram</a
         >
