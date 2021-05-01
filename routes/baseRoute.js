@@ -7,6 +7,5 @@ router.get('/', (req, res) =>
   })
 );
 
-router.get('/profile', (req, res) => res.render('../views/profile.ejs'));
 
 module.exports = router;
