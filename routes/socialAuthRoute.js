@@ -54,8 +54,11 @@ router.get(
 
 router.get('/auth/instagram/callback', fetchInstagramData);
 
-router.get('/auth/google', (req, res) =>
-  res.json({msg: 'Google Authentication Under Development.'})
+router.get('/auth/google/callback', (req, res) =>
+  res.json({
+    access_code: req.query.code,
+    msg: 'Google Authentication Under Development.',
+  })
 );
 
 router.get('/auth/twitter', (req, res) =>

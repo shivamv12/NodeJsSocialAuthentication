@@ -59,19 +59,29 @@
           class="btn btn-outline-primary"
           href="/users/auth/facebook"
           role="button"
-          >Facebook</a
         >
+          <i class="fa fa-facebook mr-2" aria-hidden="true"></i>
+          Facebook
+        </a>
         <a
           class="btn btn-outline-warning"
           href="<%= process.env.INSTA_BASE_URI %>oauth/authorize?client_id=<%= process.env.INSTA_CLIENT_ID %>&redirect_uri=<%= process.env.INSTA_REDIRECT_URI %>&scope=user_profile,user_media&response_type=code"
           role="button"
-          >Instagram</a
         >
-        <a class="btn btn-outline-danger disabled" href="#" role="button"
-          >Google</a
+          <i class="fa fa-instagram mr-2" aria-hidden="true"></i>
+          Instagram</a
         >
-        <a class="btn btn-outline-success disabled" href="#" role="button"
-          >Twitter</a
+        <a
+          class="btn btn-outline-danger"
+          href="<%= process.env.GOOGLE_BASE_URI %>?redirect_uri=<%= process.env.GOOGLE_REDIRECT_URI %>&prompt=consent&response_type=code&client_id=<%= process.env.GOOGLE_CLIENT_ID %>&scope=<%= process.env.GOOGLE_API_SCOPE %>&access_type=offline&flowName=GeneralOAuthFlow"
+          role="button"
+        >
+          <i class="fa fa-google-plus mr-2" aria-hidden="true"></i>
+          Google</a
+        >
+        <a class="btn btn-outline-success disabled" href="#" role="button">
+          <i class="fa fa-twitter mr-2" aria-hidden="true"></i>
+          Twitter</a
         >
       </p>
     </div>
