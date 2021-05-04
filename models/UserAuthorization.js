@@ -10,23 +10,33 @@ mongoose.connect(
 
 var userAuthSchema = mongoose.Schema(
   {
-    name: {type: String},
-    email: {type: String},
-    gender: {type: String},
     provider: {type: String},
-    providerUid: {type: String},
-    oauthToken: {type: String},
-    profileImageUrl: {type: String},
+    provider_uid: {type: String},
+    name: {type: String},
+    username: {type: String},
+    gender: {type: String},
+    email: {type: String},
+
+    bio: {type: String},
+    website: {type: String},
+    location: {type: String},
+    profile_image_url: {type: String},
+    banner_image_url: {type: String},
+
+    posts_count: {type: String},
+    followers_count: {type: String},
+    following_count: {type: String},
+
+    oauth_token: {type: String},
+    oauth_token_expiry: {type: Date},
+    oauth_token_secret: {type: String},
     status: {type: String, default: 'connected'},
     meta: {type: String},
 
-    // socialAccountId: {type: Number},
-    username: {type: String},
-    // oauthTokenSecret: {type: String},
-    oauthTokenExpiry: {type: Date},
-    // influencerId: {type: Number},
+    // social_account_id: {type: Number},
+    // influencer_id: {type: Number},
 
-    deletedAt: {type: Date, default: undefined},
+    deleted_at: {type: Date, default: undefined},
   },
   {timestamps: true}
 );
