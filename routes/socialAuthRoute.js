@@ -1,13 +1,57 @@
 const express = require('express');
 const router = express.Router();
 
+const User = require('../models/UserAuthorization');
+
 const passport = require('passport');
+const twitterStrategy = require('passport-twitter').Strategy;
 const facebookStrategy = require('passport-facebook').Strategy;
+
+const {twitterUserMapper} = require('../helpers/UserMapper');
 
 const {
   fetchFacebookData,
   fetchInstagramData,
 } = require('../controllers/UserAuthorizationController');
+
+/**
+ * =========================================================
+ * Passport: Twitter Strategy
+ * =========================================================
+ */
+passport.use(
+  new twitterStrategy(
+    {
+      consumerKey: process.env.TWITTER_CONSUMER_KEY,
+      consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+      callbackURL: process.env.TWITTER_CALLBACK_URI,
+    },
+    async (token, tokenSecret, profile, cb) => {
+      let err = null;
+      let user = await twitterUserMapper({token, tokenSecret, profile});
+      if (!user) err = 'Could not authenticate';
+      return cb(err, user);
+    }
+  )
+);
+
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+  User.findById(id, function (err, user) {
+    done(err, user);
+  });
+});
+
+router.get('/auth/twitter', passport.authenticate('twitter'));
+
+router.get(
+  '/auth/twitter/callback',
+  passport.authenticate('twitter', {failureRedirect: '/'}),
+  (req, res) => res.redirect('/users/profile')
+);
 
 /**
  * =========================================================
@@ -61,13 +105,12 @@ router.get('/auth/google/callback', (req, res) =>
   })
 );
 
-router.get('/auth/twitter', (req, res) =>
-  res.json({msg: 'Twitter Authentication Under Development.'})
-);
-
 /**
  * Profile URL to render user details
  */
-router.get('/profile', (req, res) => res.render('../views/profile.ejs'));
+router.get('/profile', (req, res) => {
+  res.render('../views/profile.ejs', {user: req.user ? req.user : null});
+});
+router.get('/welcome', (req, res) => res.render('../views/welcomeEmail.ejs'));
 
 module.exports = router;

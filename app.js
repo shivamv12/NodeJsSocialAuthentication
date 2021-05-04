@@ -1,8 +1,21 @@
 const express = require('express');
 require('dotenv').config({path: '.env'});
 
+const passport = require('passport');
+
 const app = express();
 app.set('view engine', 'ejs');
+
+const session = require('express-session');
+app.use(
+  session({
+    secret: process.env.APP_SECRET,
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', require('./routes/baseRoute'));
 app.use('/users', require('./routes/socialAuthRoute'));

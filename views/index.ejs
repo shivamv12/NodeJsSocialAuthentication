@@ -39,20 +39,22 @@
         <span class="fa fa-lock"></span>&nbsp;&nbsp;NodeJs Social Authentication
       </h1>
       <p class="lead">
-        This is a simple node js project enables end user to connect their
+        This is a simple node js project, which allows end user to connect their
         social channels like
         <span class="badge badge-primary">Facebook</span>,
         <span class="badge badge-warning">Instagram</span>,
         <span class="badge badge-danger">Google</span> &
         <span class="badge badge-success">Twitter</span>
-        with NodeJs.
+        with a Project.
       </p>
       <hr class="my-4" />
       <p>
-        So basically this project is not build on any of the passport strategies
-        (e.g. passport-facebook, passport-instagram and so forth), to achieve
-        its task. It uses latest Facebook & Instagram Graph APIs to authenticate
-        & fetch the data.
+        This project uses passport strategies for Facebook & Twitter
+        authentication (passport-facebook, passport-instagram), while Google
+        (Youtube) & Instagram are not build upon any of the passport strategies.
+        Project is build on latest Facebook & Instagram Graph APIs to
+        authenticate & fetch the user profile data. View tentative profile
+        <a class="card-link" href="/users/profile"> here. </a>
       </p>
       <p class="lead">
         <a
@@ -79,7 +81,11 @@
           <i class="fa fa-google-plus mr-2" aria-hidden="true"></i>
           Google</a
         >
-        <a class="btn btn-outline-success disabled" href="#" role="button">
+        <a
+          class="btn btn-outline-success"
+          href="/users/auth/twitter"
+          role="button"
+        >
           <i class="fa fa-twitter mr-2" aria-hidden="true"></i>
           Twitter</a
         >
