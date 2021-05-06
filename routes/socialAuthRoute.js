@@ -85,7 +85,14 @@ passport.use(
 router.get(
   '/auth/facebook',
   passport.authenticate('facebook', {
-    scope: 'email, public_profile, user_gender, user_birthday',
+    scope: [
+      'email',
+      'public_profile',
+      'user_gender',
+      'user_managed_groups',
+      'pages_show_list',
+      'user_birthday',
+    ],
   })
 );
 router.get(
@@ -96,7 +103,15 @@ router.get(
   })
 );
 
-router.get('/auth/instagram/callback', fetchInstagramData);
+router.get('/auth/instagram/callback/old', fetchInstagramData);
+
+router.get(
+  '/auth/instagram/callback',
+  passport.authenticate('instagram', {failureRedirect: '/'}),
+  async (req, res) => {
+    res.json({msg: 'Working on Insta auth API.', data: req.user});
+  }
+);
 
 router.get('/auth/google/callback', (req, res) =>
   res.json({
