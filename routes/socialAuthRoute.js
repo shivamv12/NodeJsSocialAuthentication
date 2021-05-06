@@ -23,9 +23,9 @@ const {
 passport.use(
   new instagramStrategy(
     {
-      clientID: INSTAGRAM_CLIENT_ID,
-      clientSecret: INSTAGRAM_CLIENT_SECRET,
-      callbackURL: 'http://127.0.0.1:3000/auth/instagram/callback',
+      clientID: process.env.INSTA_CLIENT_ID,
+      clientSecret: process.env.INSTA_CLIENT_SECRET,
+      callbackURL: process.env.INSTA_REDIRECT_URI,
     },
     (accessToken, refreshToken, profile, done) => {
       let err = null;
