@@ -25,7 +25,7 @@ passport.use(
     {
       clientID: process.env.INSTA_CLIENT_ID,
       clientSecret: process.env.INSTA_CLIENT_SECRET,
-      callbackURL: process.env.INSTA_REDIRECT_URI,
+      callbackURL: '/auth/instagram/callback',
     },
     (accessToken, refreshToken, profile, done) => {
       let err = null;
