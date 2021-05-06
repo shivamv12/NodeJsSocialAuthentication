@@ -1,3 +1,4 @@
+const cors = require('cors');
 const express = require('express');
 require('dotenv').config({path: '.env'});
 
@@ -5,6 +6,8 @@ const passport = require('passport');
 
 const app = express();
 app.set('view engine', 'ejs');
+
+app.use(cors());
 
 const session = require('express-session');
 app.use(
