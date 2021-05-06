@@ -6,6 +6,7 @@ const User = require('../models/UserAuthorization');
 const passport = require('passport');
 const twitterStrategy = require('passport-twitter').Strategy;
 const facebookStrategy = require('passport-facebook').Strategy;
+const instagramStrategy = require('passport-instagram').Strategy;
 
 const {twitterUserMapper} = require('../helpers/UserMapper');
 
@@ -13,6 +14,44 @@ const {
   fetchFacebookData,
   fetchInstagramData,
 } = require('../controllers/UserAuthorizationController');
+
+/**
+ * =========================================================
+ * Passport: Instagram Strategy
+ * =========================================================
+ */
+passport.use(
+  new instagramStrategy(
+    {
+      clientID: INSTAGRAM_CLIENT_ID,
+      clientSecret: INSTAGRAM_CLIENT_SECRET,
+      callbackURL: 'http://127.0.0.1:3000/auth/instagram/callback',
+    },
+    (accessToken, refreshToken, profile, done) => {
+      let err = null;
+      let user = {...profile, accessToken, refreshToken};
+      console.log('\n\n', JSON.stringify(user));
+      return done(err, user);
+    }
+  )
+);
+
+router.get(
+  '/auth/instagram',
+  passport.authenticate('instagram', {
+    scope: ['user_profile', 'user_media'],
+  })
+);
+
+router.get(
+  '/auth/instagram/callback',
+  passport.authenticate('instagram', {failureRedirect: '/'}),
+  async (req, res) => {
+    res.json({msg: 'Working on Insta auth API.', data: req.user});
+  }
+);
+
+router.get('/auth/instagram/callback/old', fetchInstagramData);
 
 /**
  * =========================================================
@@ -101,16 +140,6 @@ router.get(
     successRedirect: `${process.env.APP_BASE_URI}/profile`,
     failureRedirect: '/',
   })
-);
-
-router.get('/auth/instagram/callback/old', fetchInstagramData);
-
-router.get(
-  '/auth/instagram/callback',
-  passport.authenticate('instagram', {failureRedirect: '/'}),
-  async (req, res) => {
-    res.json({msg: 'Working on Insta auth API.', data: req.user});
-  }
 );
 
 router.get('/auth/google/callback', (req, res) =>
