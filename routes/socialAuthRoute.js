@@ -25,12 +25,13 @@ passport.use(
     {
       clientID: process.env.INSTA_CLIENT_ID,
       clientSecret: process.env.INSTA_CLIENT_SECRET,
-      callbackURL: '/auth/instagram/callback',
+      callbackURL:
+        'https://node-social-auth.herokuapp.com/users/auth/instagram/callback',
     },
     (accessToken, refreshToken, profile, done) => {
       let err = null;
       let user = {...profile, accessToken, refreshToken};
-      console.log('\n\n', JSON.stringify(user));
+      console.log('\nGOT TOKEN..\n', JSON.stringify(user));
       return done(err, user);
     }
   )
@@ -45,7 +46,7 @@ router.get(
 
 router.get(
   '/auth/instagram/callback',
-  // passport.authenticate('instagram', {failureRedirect: '/'})
+  passport.authenticate('instagram', {failureRedirect: '/'}),
   async (req, res) => {
     res.json({msg: 'Working on Insta auth API.', code: req.query});
   }
