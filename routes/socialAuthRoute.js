@@ -45,10 +45,10 @@ router.get(
 
 router.get(
   '/auth/instagram/callback',
-  passport.authenticate('instagram', {failureRedirect: '/'})
-  // async (req, res) => {
-  //   res.json({msg: 'Working on Insta auth API.', code: req.query});
-  // }
+  // passport.authenticate('instagram', {failureRedirect: '/'})
+  async (req, res) => {
+    res.json({msg: 'Working on Insta auth API.', code: req.query});
+  }
 );
 
 router.get('/auth/instagram/callback/old', fetchInstagramData);
