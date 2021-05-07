@@ -60,9 +60,9 @@ router.get(
     );
     formData.append('code', req.query.code);
 
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
-    }
+    // for (var pair of formData.entries()) {
+    //   console.log(pair[0] + ', ' + pair[1]);
+    // }
 
     axios
       .post('https://api.instagram.com/oauth/access_token', formData)
