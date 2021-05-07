@@ -1,0 +1,95 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NodeJs Social Authentication</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://icons-for-free.com/iconfiles/png/128/lock+password+protect+safety+security+icon-1320086045132546966.png"
+    />
+    <!-- load bootstrap css -->
+    <link
+      rel="stylesheet"
+      href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"
+    />
+    <!-- load fontawesome -->
+    <link
+      rel="stylesheet"
+      href="https://bootswatch.com/4/cyborg/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="jumbotron">
+      <% if(errors) { %>
+      <div class="alert alert-dismissible alert-warning mb-5">
+        <button type="button" class="close" data-dismiss="alert">
+          &times;
+        </button>
+        <h4 class="alert-heading">Warning! <%= errors.error %></h4>
+        <p class="mb-0">
+          Best check yo self, you're not looking too good. Nulla vitae elit
+          libero, a pharetra augue. Praesent commodo cursus magna,
+          <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a
+          >.
+        </p>
+      </div>
+      <% } %>
+      <h1 class="display-3">
+        <span class="fa fa-lock"></span>&nbsp;&nbsp;NodeJs Social Authentication
+      </h1>
+      <p class="lead">
+        This is a simple node js project, which allows end user to connect their
+        social channels like
+        <span class="badge badge-primary">Facebook</span>,
+        <span class="badge badge-warning">Instagram</span>,
+        <span class="badge badge-danger">Google</span> &
+        <span class="badge badge-success">Twitter</span>
+        with a Project.
+      </p>
+      <hr class="my-4" />
+      <p>
+        This project uses passport strategies for Facebook & Twitter
+        authentication (passport-facebook, passport-instagram), while Google
+        (Youtube) & Instagram are not build upon any of the passport strategies.
+        Project is build on latest Facebook & Instagram Graph APIs to
+        authenticate & fetch the user profile data. View tentative profile
+        <a class="card-link" href="/users/profile"> here. </a>
+      </p>
+      <p class="lead">
+        <a
+          class="btn btn-outline-primary"
+          href="/users/auth/facebook"
+          role="button"
+        >
+          <i class="fa fa-facebook mr-2" aria-hidden="true"></i>
+          Facebook
+        </a>
+        <a
+          class="btn btn-outline-warning"
+          href="<%= process.env.INSTA_BASE_URI %>oauth/authorize?client_id=<%= process.env.INSTA_CLIENT_ID %>&redirect_uri=<%= process.env.INSTA_REDIRECT_URI %>&scope=user_profile,user_media&response_type=code"
+          role="button"
+        >
+          <i class="fa fa-instagram mr-2" aria-hidden="true"></i>
+          Instagram</a
+        >
+        <a
+          class="btn btn-outline-danger"
+          href="<%= process.env.GOOGLE_BASE_URI %>?redirect_uri=<%= process.env.GOOGLE_REDIRECT_URI %>&prompt=consent&response_type=code&client_id=<%= process.env.GOOGLE_CLIENT_ID %>&scope=<%= process.env.GOOGLE_API_SCOPE %>&access_type=offline&flowName=GeneralOAuthFlow"
+          role="button"
+        >
+          <i class="fa fa-google-plus mr-2" aria-hidden="true"></i>
+          Google</a
+        >
+        <a
+          class="btn btn-outline-success"
+          href="/users/auth/twitter"
+          role="button"
+        >
+          <i class="fa fa-twitter mr-2" aria-hidden="true"></i>
+          Twitter</a
+        >
+      </p>
+    </div>
+  </body>
+</html>
