@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const FormData = require('form-data');
 
 const User = require('../models/UserAuthorization');
 
@@ -49,25 +50,45 @@ router.get(
   '/auth/instagram/callback',
   // passport.authenticate('instagram', {failureRedirect: '/'}),
   async (req, res) => {
-    axios({
-      method: 'POST',
-      url: `https://api.instagram.com/oauth/access_token`,
-      data: {
-        client_id: '470492064170193',
-        client_secret: 'dd596806c5dc68987946243a62617d98',
-        grant_type: 'authorization_code',
-        redirect_uri:
-          'https://node-social-auth.herokuapp.com/users/auth/instagram/callback',
-        code: req.query.code,
-      },
-      headers: {'Content-Type': 'application/json'}, // application/x-www-form-urlencoded'},
-    })
-      .then(function (response) {
-        console.log('Response: ', response.data);
+    const formData = new FormData();
+    formData.append('client_id', '470492064170193');
+    formData.append('client_secret', 'dd596806c5dc68987946243a62617d98');
+    formData.append('grant_type', 'authorization_code');
+    formData.append(
+      'redirect_uri',
+      'https://node-social-auth.herokuapp.com/users/auth/instagram/callback'
+    );
+    formData.append('code', req.query.code);
+
+    axios
+      .post('https://api.instagram.com/oauth/access_token', formData)
+      .then((resp) => {
+        console.log('\n\n', resp.data);
       })
-      .catch(function (error) {
-        console.log('Error: ', error.response.data);
+      .catch((err) => {
+        console.log('\n\nError: ', err.message);
+        console.log('\n\nError: ', err.response.data);
       });
+
+    // axios({
+    //   method: 'POST',
+    //   url: `https://api.instagram.com/oauth/access_token`,
+    //   data: {
+    //     client_id: '470492064170193',
+    //     client_secret: 'dd596806c5dc68987946243a62617d98',
+    //     grant_type: 'authorization_code',
+    //     redirect_uri:
+    //       'https://node-social-auth.herokuapp.com/users/auth/instagram/callback',
+    //     code: req.query.code,
+    //   },
+    //   headers: {'Content-Type': 'application/json'}, // application/x-www-form-urlencoded'},
+    // })
+    //   .then(function (response) {
+    //     console.log('Response: ', response.data);
+    //   })
+    //   .catch(function (error) {
+    //     console.log('Error: ', error.response.data);
+    //   });
 
     res.json({msg: 'Working on Insta auth API.', code: req.query});
   }
