@@ -203,5 +203,6 @@ router.get('/profile', (req, res) => {
 });
 router.get('/welcome', (req, res) => res.render('../views/welcomeEmail.ejs'));
 router.get('/welcome1', (req, res) => res.render('../views/welcomeEmail1.ejs'));
+router.get('/welcome2', (req, res) => res.render('../views/welcomeEmail2.ejs'));
 
 module.exports = router;
