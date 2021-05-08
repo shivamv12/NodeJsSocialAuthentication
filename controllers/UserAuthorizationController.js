@@ -132,7 +132,56 @@ exports.fetchInstagramData = async (req, res) => {
  * @param {*} req
  * @desc {*} Map user data from google (youtube)
  */
-exports.fetchYoutubeData = async (req, res) => {};
+exports.fetchYoutubeData = async (req, res) => {
+  let url = `https://youtube.googleapis.com/youtube/v3/channels?part=snippet,contentDetails,statistics&mine=true&key=${process.env.GOOGLE_API_KEY}`;
+
+  // Fetch User Details
+  const ytData = await axios(url, {
+    headers: {Authorization: `Bearer ${req.user.accessToken}`},
+  });
+
+  console.log('\n\nCOMING TILL HERE...', ytData);
+
+  let userRes = await User.findOne({provider_uid: req.user.id});
+  if (!userRes) {
+    let newUser = new User();
+    newUser.provider = req.user.provider;
+    newUser.provider_uid = req.user.id;
+    newUser.oauth_token = req.user.accessToken;
+    newUser.name = req.user.displayName;
+    newUser.username = ytData.data.items[0].id;
+    newUser.email = req.user.email ? req.user.email : null;
+    newUser.gender = req.user.gender ? req.user.gender : null;
+    newUser.profile_image_url =
+      ytData.data &&
+      ytData.data.items &&
+      ytData.data.items.length &&
+      ytData.data.items[0].statistics &&
+      ytData.data.items[0].statistics.thumbnails &&
+      ytData.data.items[0].statistics.thumbnails.high
+        ? ytData.data.items[0].snippet.thumbnails.high.url
+        : null;
+    newUser.posts_count =
+      ytData.data &&
+      ytData.data.items &&
+      ytData.data.items.length &&
+      ytData.data.items[0].statistics
+        ? ytData.data.items[0].statistics.videoCount
+        : 0;
+    newUser.followers_count =
+      ytData.data &&
+      ytData.data.items &&
+      ytData.data.items.length &&
+      ytData.data.items[0].statistics
+        ? ytData.data.items[0].statistics.subscriberCount
+        : 0;
+    newUser.meta = req.user._raw;
+
+    userRes = await newUser.save();
+  }
+
+  return userRes;
+};
 
 /**
  * @param {*} req

@@ -9,12 +9,14 @@ const User = require('../models/UserAuthorization');
 const twitterStrategy = require('passport-twitter').Strategy;
 const facebookStrategy = require('passport-facebook').Strategy;
 const instagramStrategy = require('passport-instagram').Strategy;
+const googleStrategy = require('passport-google-oauth20').Strategy;
 
 /** Initialize Router */
 const router = express.Router();
 
 /** Controller File(s) */
 const {
+  fetchYoutubeData,
   fetchTwitterData,
   fetchFacebookData,
   fetchInstagramData,
@@ -91,9 +93,9 @@ passport.use(
     {
       clientID: process.env.INSTA_CLIENT_ID,
       clientSecret: process.env.INSTA_CLIENT_SECRET,
-      callbackURL: process.env.INSTA_REDIRECT_URI,
+      callbackURL: process.env.INSTA_CALLBACK_URI,
     },
-    (accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
       let user = {...profile, accessToken, refreshToken};
       return done(null, user);
     }
@@ -112,6 +114,47 @@ router.get('/auth/instagram/callback', async (req, res) => {
 
 /**
  * =========================================================
+ * Passport: Google Strategy
+ * =========================================================
+ */
+passport.use(
+  new googleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URI,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      let user = {...profile, accessToken, refreshToken};
+      return done(null, user);
+    }
+  )
+);
+
+router.get(
+  '/auth/google',
+  passport.authenticate('google', {
+    scope: [
+      'email',
+      'openid',
+      'profile',
+      'https://www.googleapis.com/auth/youtube',
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/youtube.readonly',
+      'https://www.googleapis.com/auth/yt-analytics.readonly',
+    ],
+  })
+);
+
+router.get(
+  '/auth/google/callback',
+  passport.authenticate('google'),
+  fetchYoutubeData
+);
+
+/**
+ * =========================================================
  * Passport: Twitter Strategy
  * =========================================================
  */
@@ -122,9 +165,9 @@ passport.use(
       consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
       callbackURL: process.env.TWITTER_CALLBACK_URI,
     },
-    async (token, tokenSecret, profile, cb) => {
+    async (token, tokenSecret, profile, done) => {
       let user = await fetchTwitterData({token, tokenSecret, profile});
-      return cb(null, user);
+      return done(null, user);
     }
   )
 );
@@ -135,18 +178,6 @@ router.get(
   '/auth/twitter/callback',
   passport.authenticate('twitter'),
   (req, res) => res.redirect('/users/profile')
-);
-
-/**
- * =========================================================
- * Passport: Google Strategy
- * =========================================================
- */
-router.get('/auth/google/callback', (req, res) =>
-  res.json({
-    access_code: req.query.code,
-    msg: 'Google Authentication Under Development.',
-  })
 );
 
 /**
@@ -171,5 +202,6 @@ router.get('/profile', (req, res) => {
   res.render('../views/profile.ejs', {user: req.user ? req.user : null});
 });
 router.get('/welcome', (req, res) => res.render('../views/welcomeEmail.ejs'));
+router.get('/welcome1', (req, res) => res.render('../views/welcomeEmail1.ejs'));
 
 module.exports = router;
