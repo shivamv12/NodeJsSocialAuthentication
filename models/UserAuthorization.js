@@ -8,7 +8,7 @@ mongoose.connect(
   }
 );
 
-var userAuthSchema = mongoose.Schema(
+const userAuthSchema = mongoose.Schema(
   {
     provider: {type: String},
     provider_uid: {type: String},
@@ -22,6 +22,9 @@ var userAuthSchema = mongoose.Schema(
     location: {type: String},
     profile_image_url: {type: String},
     banner_image_url: {type: String},
+    hometown: {type: String},
+    birthday: {type: String},
+    profile_url: {type: String},
 
     posts_count: {type: String},
     followers_count: {type: String},
@@ -29,12 +32,25 @@ var userAuthSchema = mongoose.Schema(
 
     oauth_token: {type: String},
     oauth_token_expiry: {type: Date},
+    oauth_token_expires_in: {type: Date},
     oauth_token_secret: {type: String},
     status: {type: String, default: 'connected'},
     meta: {type: String},
 
-    // social_account_id: {type: Number},
-    // influencer_id: {type: Number},
+    pages: [
+      {
+        _id: false,
+        access_token: {type: String},
+        category: {type: String},
+        category_list: [{_id: false, id: {type: String}, name: {type: String}}],
+        name: {type: String},
+        id: {type: String},
+        tasks: [{type: String}],
+      },
+    ],
+    paging: {
+      cursors: {before: {type: String}, after: {type: String}},
+    },
 
     deleted_at: {type: Date, default: undefined},
   },
